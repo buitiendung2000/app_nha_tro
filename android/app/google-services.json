@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "990623475684",
+    "firebase_url": "https://dung60th1-b0c7b-default-rtdb.firebaseio.com",
+    "project_id": "dung60th1-b0c7b",
+    "storage_bucket": "dung60th1-b0c7b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990623475684:android:a333ef75bcd18a0a20c9f1",
+        "android_client_info": {
+          "package_name": "com.example.tinh_tien_dien_nuoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXroQ57bxMsw2efJg2yG9fQgyclsBrqyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990623475684:android:e7a2f0afac3689e220c9f1",
+        "android_client_info": {
+          "package_name": "com.example.tinh_tien_dien_nuoc_phong_tro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXroQ57bxMsw2efJg2yG9fQgyclsBrqyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
