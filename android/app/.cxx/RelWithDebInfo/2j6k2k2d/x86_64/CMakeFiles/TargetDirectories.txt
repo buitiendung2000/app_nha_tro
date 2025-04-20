@@ -1,0 +1,2 @@
+C:/my_project_flutter/tinh_tien_dien_nuoc_phong_tro/android/app/.cxx/RelWithDebInfo/2j6k2k2d/x86_64/CMakeFiles/edit_cache.dir
+C:/my_project_flutter/tinh_tien_dien_nuoc_phong_tro/android/app/.cxx/RelWithDebInfo/2j6k2k2d/x86_64/CMakeFiles/rebuild_cache.dir

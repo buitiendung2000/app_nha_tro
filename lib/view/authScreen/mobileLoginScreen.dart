@@ -30,243 +30,214 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
       });
     });
   }
-
-  @override
+@override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-          body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
-        children: [
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            'Nhập số điện thoại của bạn',
-            style: AppTextStyles.body16,
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () {
-                  showCountryPicker(
-                    context: context,
-                    showPhoneCode:
-                        true, // optional. Shows phone code before the country name.
-                    onSelect: (Country country) {
-                      setState(() {
-                        selectedCountry = '+${country.phoneCode}';
-                      });
-                      print('Chọn quốc gia: ${country.displayName}');
-                    },
-                  );
-                },
-                child: Container(
-                  height: 6.h,
-                  width: 25.w,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        4.sp,
-                      ),
-                      border: Border.all(color: grey)
-                      // color: greyShade3,
-                      ),
-                  child: Text(
-                    selectedCountry,
-                    style: AppTextStyles.body14,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 65.w,
-                child: TextField(
-                  controller: mobileController,
-                  cursorColor: black,
-                  style: AppTextStyles.textFieldTextStyle,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 0, horizontal: 2.w),
-                    hintText: 'Số điện thoại',
-                    hintStyle: AppTextStyles.textFieldHintTextStyle,
-                    // filled: true,
-                    // fillColor: greyShade3,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: black,
-                      ),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: grey,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: grey,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  receiveOTPButtonPressed = true;
-                });
-                context.read<MobileAuthProvider>().updateMobileNumber(
-                    '$selectedCountry${mobileController.text.trim()}');
-                MobileAuthServices.receiveOTP(
-                    context: context,
-                    mobileNo:
-                        '$selectedCountry${mobileController.text.trim()}');
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: black, minimumSize: Size(90.w, 6.h)),
-              child: receiveOTPButtonPressed
-                  ? CircularProgressIndicator(
-                      color: white,
-                    )
-                  : Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Tiếp theo',
-                            style: AppTextStyles.body16.copyWith(color: white),
-                          ),
-                        ),
-                        Positioned(
-                          right: 2.w,
-                          child: Icon(
-                            Icons.arrow_forward,
-                            color: white,
-                            size: 4.h,
-                          ),
-                        )
-                      ],
-                    )),
-          SizedBox(
-            height: 3.w,
-          ),
-          Text(
-            'Bằng cách tiếp tục, bạn đồng ý nhận cuộc gọi, tin nhắn Whatsapp hoặc SMS, bao gồm cả bằng các phương tiện tự động, từ uber và các chi nhánh của nó đến số được cung cấp.',
-            style: AppTextStyles.small12.copyWith(
-              color: grey,
+        body: Container(
+          width: double.infinity,
+          height: screenHeight,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF56CCF2), Color(0xFF2F80ED)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-          SizedBox(
-            height: 2.h,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Divider(
-                  color: grey,
-                ),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: screenHeight,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.w),
-                child: Text(
-                  'hoặc',
-                  style: AppTextStyles.small12.copyWith(
-                    color: grey,
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 5.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Icon(Icons.home_work_rounded,
+                                size: 10.h, color: Colors.white),
+                            SizedBox(height: 2.h),
+                            Text(
+                              'Chào mừng đến với App Phòng Trọ!',
+                              style: AppTextStyles.body16.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.sp,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
+                      Text(
+                        'Nhập số điện thoại để tiếp tục',
+                        style:
+                            AppTextStyles.body14.copyWith(color: Colors.white),
+                      ),
+                      SizedBox(height: 2.h),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              showCountryPicker(
+                                context: context,
+                                showPhoneCode: true,
+                                onSelect: (country) {
+                                  setState(() {
+                                    selectedCountry = '+${country.phoneCode}';
+                                  });
+                                },
+                              );
+                            },
+                            child: Container(
+                              height: 6.5.h,
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.orangeAccent),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                selectedCountry,
+                                style: AppTextStyles.body14,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: TextField(
+                              controller: mobileController,
+                              keyboardType: TextInputType.phone,
+                              style: AppTextStyles.textFieldTextStyle,
+                              cursorColor: Colors.orangeAccent,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: 'Số điện thoại',
+                                hintStyle:
+                                    TextStyle(color: Colors.grey.shade500),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Colors.orangeAccent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Colors.deepOrange),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 4.w, vertical: 1.5.h),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              receiveOTPButtonPressed = true;
+                            });
+                            final fullPhone =
+                                '$selectedCountry${mobileController.text.trim()}';
+                            context
+                                .read<MobileAuthProvider>()
+                                .updateMobileNumber(fullPhone);
+                            MobileAuthServices.receiveOTP(
+                                context: context, mobileNo: fullPhone);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepOrange,
+                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: receiveOTPButtonPressed
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Tiếp theo',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(width: 2.w),
+                                    Icon(Icons.arrow_forward,
+                                        color: Colors.white),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'Số điện thoại đăng nhập là số bạn đã đăng ký với chủ nhà. Mã OTP mặc định là 123456.',
+                        style: AppTextStyles.small12
+                            .copyWith(color: Colors.white70),
+                      ),
+                      SizedBox(height: 4.h),
+                      Row(
+                        children: [
+                          Expanded(child: Divider(color: Colors.white70)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 3.w),
+                            child: Text('hoặc',
+                                style: AppTextStyles.small12
+                                    .copyWith(color: Colors.white70)),
+                          ),
+                          Expanded(child: Divider(color: Colors.white70)),
+                        ],
+                      ),
+                      SizedBox(height: 2.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () =>
+                              MobileAuthServices().signInAsOwner(context),
+                          icon: FaIcon(FontAwesomeIcons.userShield,
+                              color: Colors.deepOrange),
+                          label: Text(
+                            'Đăng nhập với tư cách chủ nhà',
+                            style: AppTextStyles.body16.copyWith(
+                                color: Colors.deepOrange,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(color: Colors.deepOrangeAccent),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Expanded(
-                child: Divider(
-                  color: grey,
-                ),
-              ),
-            ],
+            ),
           ),
-          SizedBox(
-            height: 2.h,
-          ),
-          Column(
-            children: [
-              ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: white,
-                      minimumSize: Size(90.w, 6.h),
-                      elevation: 2),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Đăng nhập với Google',
-                          style: AppTextStyles.body16,
-                        ),
-                      ),
-                      Positioned(
-                        left: 2.w,
-                        child: FaIcon(
-                          FontAwesomeIcons.google,
-                          color: black,
-                          size: 3.h,
-                        ),
-                      ),
-                    ],
-                  )),
-              ElevatedButton(
-                  onPressed: () {
-                    
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              EmailScreen()),  
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: white,
-                      minimumSize: Size(90.w, 6.h),
-                      elevation: 2),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Đăng nhập với Email',
-                          style: AppTextStyles.body16,
-                        ),
-                      ),
-                      Positioned(
-                        left: 2.w,
-                        child: FaIcon(
-                          FontAwesomeIcons.google,
-                          color: black,
-                          size: 3.h,
-                        ),
-                      ),
-                    ],
-                  )),
-            ],
-          )
-        ],
-      )),
+        ),
+      ),
     );
   }
+
+
 }

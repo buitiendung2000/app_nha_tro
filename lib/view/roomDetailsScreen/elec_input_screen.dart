@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class UsageInputScreen extends StatefulWidget {
   final String phoneNumber;
   const UsageInputScreen({super.key, required this.phoneNumber});
@@ -104,7 +105,7 @@ class _UsageInputScreenState extends State<UsageInputScreen> {
     });
   }
 
-  Future<void> _saveDataToFirebase() async {
+ Future<void> _saveDataToFirebase() async {
     final phoneNumber = widget.phoneNumber.trim();
 
     if (phoneNumber.isEmpty) {
@@ -148,6 +149,9 @@ class _UsageInputScreenState extends State<UsageInputScreen> {
           .collection('bills')
           .add(billData);
 
+      // ✅ Gửi thông báo sau khi lưu hóa đơn
+      await _sendNotificationToTenant(phoneNumber);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lưu dữ liệu thành công!')),
       );
@@ -157,6 +161,34 @@ class _UsageInputScreenState extends State<UsageInputScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi khi lưu dữ liệu: $e')),
       );
+    }
+  }
+
+// ✅ Gửi thông báo FCM đến người thuê
+  Future<void> _sendNotificationToTenant(String tenantPhone) async {
+    const String serverUrl =
+        'https://pushnoti-8jr2.onrender.com/sendTenantNoti';
+
+    final body = jsonEncode({
+      'tenantPhone': tenantPhone,
+      'title': 'Thông báo thanh toán hóa đơn',
+      'body': 'Bạn có thông báo hóa đơn thanh toán mới. Cảm ơn bạn!',
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(serverUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint('🔔 Gửi thông báo cho người thuê thành công');
+      } else {
+        debugPrint('❌ Lỗi server khi gửi thông báo: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('❌ Lỗi kết nối khi gửi thông báo: $e');
     }
   }
 

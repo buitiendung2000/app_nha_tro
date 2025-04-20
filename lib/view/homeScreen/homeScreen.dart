@@ -1,116 +1,116 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/allBillScreen.dart';
-import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/profileManagementScreen.dart';
-import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/profileScreen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/controller/provider/homeProvider/homeProvider.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/chatPageScreen/chatPage.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/allBillScreen/allBillScreen.dart' show AllBillsScreen;
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/feedBackSummaryScreen.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/pendingInvoices/pendingInvoicesScreen.dart';
+ 
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/profileScreen/profile_management_screen.dart';
+ 
+ 
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/authScreen/returnRoom/returnRoomScreen.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/revenueScreen.dart';
+ 
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/roomDetailsScreen/roomDetailsScreen.dart';
-import 'package:tinh_tien_dien_nuoc_phong_tro/view/signinLogicScreen/signLogicScreen.dart';
-import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/myBillScreen.dart'; // ✅ Import màn hình mới
+ // import các màn hình con
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // Hàm xử lý đăng xuất
-  Future<void> signOut(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SignInLogicScreen()),
-        (route) => false,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi đăng xuất: ${e.toString()}')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    // ✅ Lấy số điện thoại từ Firebase
-    String? phoneNumber = FirebaseAuth.instance.currentUser?.phoneNumber;
+    final provider = context.watch<HomeProvider>();
+    final menuItems = [
+      _MenuItem(
+          "Quản lý hồ sơ trọ", Icons.group, const ProfileManagementScreen()),
+      _MenuItem("Doanh thu", Icons.attach_money, const RevenueScreen()),
+      _MenuItem("Tạo hóa đơn", Icons.receipt, RoomDetailsScreen()),
+      _MenuItem("Xem hóa đơn", Icons.list_alt, const AllBillsScreen()),
+      _MenuItem(
+          "Hóa đơn cần xử lý", Icons.pending_actions, const PendingBillsPage(),
+          showDot: provider.hasPendingBills),
+      _MenuItem("Trò chuyện", Icons.chat, const ChatPage(),
+          showDot: provider.hasUnreadMessages),
+      _MenuItem("Tổng hợp góp ý", Icons.feedback, const FeedbackSummaryScreen(),
+          showDot: provider.hasUnprocessedFeedback),
+      _MenuItem("Đơn trả phòng", Icons.assignment, const ReturnRoomScreen(),
+          showDot: provider.hasReturnRoom),
+      // ... các mục khác không cần dot
+      _MenuItem("Đăng xuất", Icons.logout, null),
+    ];
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Home Screen', style: TextStyle(fontSize: 24)),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Quản lý hồ sơ cá nhân
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      appBar: AppBar(
+        title: const Text("Trang chủ - Chủ trọ"),
+        backgroundColor: Colors.teal,
+        centerTitle: true,
+      ),
+      body: GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(16),
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        children: menuItems.map((item) {
+          return GestureDetector(
+            onTap: () {
+              if (item.route == null) {
+                // sign-out logic có thể gọi provider hoặc vẫn dùng trực tiếp
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/signIn');
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => item.route!),
+                );
+              }
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: const Text('Quản lý hồ sơ cá nhân'),
-            ),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Quản lý hồ sơ cá nhân phòng trọ
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ProfileManagementScreen()),
-              ),
-              child: const Text('Quản lý hồ sơ cá nhân phòng trọ'),
-            ),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Quản lý điện nước phòng trọ
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>   RoomDetailsScreen()),
-              ),
-              child: const Text('Quản lý điện nước phòng trọ'),
-            ),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Xem hóa đơn phòng trọ
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AllBillsScreen()),
-              ),
-              child: const Text('Xem hóa đơn phòng trọ'),
-            ),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Thanh toán hóa đơn phòng trọ
-            ElevatedButton(
-              onPressed: () {
-                if (phoneNumber != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MyBillScreen(phoneNumber: phoneNumber),
+              elevation: 4,
+              child: Stack(
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(item.icon, size: 40, color: Colors.teal),
+                        const SizedBox(height: 10),
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Không tìm thấy số điện thoại')),
-                  );
-                }
-              },
-              child: const Text('Thanh toán hóa đơn phòng trọ'),
+                  ),
+                  if (item.showDot)
+                    const Positioned(
+                      top: 8,
+                      right: 8,
+                      child:
+                          CircleAvatar(radius: 6, backgroundColor: Colors.red),
+                    ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-
-            // ✅ Nút Đăng xuất
-            ElevatedButton(
-              onPressed: () => signOut(context),
-              child: const Text('Đăng xuất'),
-            ),
-          ],
-        ),
+          );
+        }).toList(),
       ),
     );
   }
+}
+
+class _MenuItem {
+  final String title;
+  final IconData icon;
+  final Widget? route;
+  final bool showDot;
+  const _MenuItem(this.title, this.icon, this.route, {this.showDot = false});
 }
