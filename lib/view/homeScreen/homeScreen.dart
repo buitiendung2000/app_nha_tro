@@ -5,6 +5,7 @@ import 'package:tinh_tien_dien_nuoc_phong_tro/controller/provider/homeProvider/h
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/chatPageScreen/chatPage.dart';
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/allBillScreen/allBillScreen.dart' show AllBillsScreen;
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/feedBackSummaryScreen.dart';
+import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/notification/createNotification.dart';
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/pendingInvoices/pendingInvoicesScreen.dart';
  
 import 'package:tinh_tien_dien_nuoc_phong_tro/view/homeScreen/profileScreen/profile_management_screen.dart';
@@ -28,6 +29,8 @@ class HomeScreen extends StatelessWidget {
       _MenuItem("Doanh thu", Icons.attach_money, const RevenueScreen()),
       _MenuItem("Tạo hóa đơn", Icons.receipt, RoomDetailsScreen()),
       _MenuItem("Xem hóa đơn", Icons.list_alt, const AllBillsScreen()),
+      _MenuItem(
+          "Tạo thông báo", Icons.notifications, const CreateNotificationPage()),
       _MenuItem(
           "Hóa đơn cần xử lý", Icons.pending_actions, const PendingBillsPage(),
           showDot: provider.hasPendingBills),
